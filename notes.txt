@@ -1,0 +1,117 @@
+Denavit Hartenberg(DH) Parameters:
+1) Ai - Distance measured along Xi axis frm point of intersection of Xi axis with Zi-1 axis to the origin
+2) αi - Angle between the joint axes Zi-1 and Zi axes measured about Xi axis in the right hand sense.
+3) θi - The angle between the common normals is measured in a plane normal to the joint axis Zi-1
+4) Di - Di is the distance measured along Zi-1 axis between the common normals
+
+
+DH Frame Assignment Rules:
+1) Z - Axis is along the rotation direction for revolute joints and along the translation direction for prismatic joints
+2) The Zi-1 axis lies along the axis of motion of the ith joint
+3) The origin Oi is located at the intersection of joint axis Zi with the common normal to Zi and Zi-1
+4) The Xi axis is taken along the common normal and points from joint i to i+1
+5) The Yi axis is selected to completet the Right Hand Frame Assignment. Yi = Xi x Zi
+DH Table and parameters ONLY CARE for Z and X axes, the Y axis is irrelevant in the calculations.
+
+DH Convention:
+H = T0_n = T0_1 * T1_2 * T2_3....Tn-1_n
+
+where Tn-1_n = [Ri_i-1      di_i-1]
+               |0           1     |
+
+There are two forms of DH representation.
+
+Classical Representation and Convention:
+The link and joint parameters of the classical convention has the following rules:
+1)  Link length Ai - The offset distancce from Oi to the intersection of Zi-1 and the Xi axes along the Xi axis.
+2)  Twist angle αi - The angle from Zi-1 axis to the Zi axis about the Xi axis
+3)  Offset length Di - The distancce ffrom the origin of the (i-1) frame to the intersection of the Zi-1 axis   with the Xi axis along the Zi-1 axis
+4)  Joint angle θi - The angle between the Xi-1 and the Xi axes about the Zi-1 axis.
+
+
+The frame transformation Ti-1,i describing finite motion from link i-1 to link i may be expressed as the following sequence of elementary transformations, starting from link i-1
+
+1)  Rot(Zi-1,θi)
+2)  Trans(Di, Zi-1)
+3)  Trans(Ai, Xi)
+4)  Rot(αi, Xi)
+
+Calculating the matrix multiplication of the above four we get:
+[cθi    -sθi    sαisθi   Aicθi] -> cθi - cosθi
+|sθi    cαicθi  -sαicθi  Aisθi|
+|0      sαi     cαi      Di   |
+|0      0       0        1    |
+
+Algorithm for the classical DH Convention/Representation:
+1)  Identify and number the links starting from the base and ending with the end-effector(tool). The links are numbered from ) to n. The base frame is {0} and the end-effector frame is {n}. Locate and label joint axes Z0...Zn-1.
+2)  The location of the base frame is arbitrary. The X0 axis which is perpendicular to Z0 is chosen to be paralled to X1 axis when the first joint angle θi = 0 in the home position. The Yo axis is defined by Y0 = X0 x Z0 (cross-product)
+3)  Locate the origin Oi where the common normal Zi to Zi-1 axes intersect the Zi axis. If Zi axis intersects the Zi-1 axis, Oi is at the point of intersection. If Zi and Zi-1 are parallel, then Oi is any convenient position along the Zi axis.
+4)  Xi is along the common normal between Zi and Zi-1 through Oi. The Xi axis is fixed perpendicular to bothe Zi and Zi-1 axes and poiunts away from Zi axis. The origin of frame (i) is at the intersection of Zi and Xi axes.
+If the Z-axes of two successive joints are intersecting, there is no common normal between them (or it has zero length). We will assign the X-axis along a line perpendicular to the plane formed
+by the two axes. If Zi and Zi-1 axes intersect, choose the origin at the point of intersection. The Xi axis will be perpendicular to the plane containing Zi and Zi-1 . In this case, the parameter Ai
+equals 0.
+• If two joint Z-axes are parallel, there are an infinite number of
+common normals present. We will pick the common normal that is collinear with the common normal of the previous joint. A common method for choosing Oi is to choose the normal that passes through Oi-1 as the Xi axis; Oi is then the point at which this normal intersects Zi . In this case, Di is equal to zero. Since the Zi and Zi-1 axes are parallel, αi is equal to zero.
+• If Zi and Zi-1 axes coincide, the origin lies on the common axis.
+If the joint i is revolute, the origin is located to coincide with origin of frame (i) and Xi axis coincides with Xi-1 axis. If the joint i is prismatic, Xi axis is chosen parallel to Xi-1 axis and the origin is located at the distal end of the link i.
+5)  The Yi axis is selected to complete the right hand frame.
+6)  Establish the end-effeector frame (On).
+Assuming the nth joint is revolute, set Zn = a (approach direction) along the direction Zn-1 and pointing away from the link n. Establish the origin On conveniently along Zn, preferably at the center of the gripper or at the tip of any tool that the manipulator may be carrying. Set Yn = s in the sliding direction along which the fingers the gripper slide to open or close and set Xn = n as s × a(normal direction). If the tool is not a simple gripper set Xn and Yn conveniently to form a right-hand frame
+7)  Create a table of link parameters Ai, αi, Di, and θi. The link length Ai is the shortest distance between Zi-1 and Zi. It is measured as the distance along the direction of Xi from the intersection of Zi−1 and Xi to the origin of the ith coordinate frame. For intersecting joint axes the value of Ai is zero. It has no meaning for prismatic joints and is set to zero in this case. The offset angle, αi, is measured from zi−1 axis to zi about the xi axis, again using a right-hand rule. For most commercial manipulators the offset angles are multiples of 90°.
+• The distance between links, di, is the distance from the xi−1 to the xi axis measured along the zi−1 axis. If the joint is prismatic,
+di is the joint variable. In the case of a revolute joint, it is a constant or zero.
+• θi is the angle from the xi−1 to the xi axis measured about zi−1 axis. This is defined using a right-hand rule since both xi−1 and
+xi are perpendicular to zi−1 . The direction of rotation is positive if the cross product of xi−1 and xi defines the zi−1 axis. θi is the joint variable if the joint i is revolute. In the case of a prismatic joint it is a constant or zero.
+8) Form the HTM Ti-1,i by substituting the above parameters in the matrix equation:
+[cθi    -sθi    sαisθi   Aicθi] -> cθ - cosθ
+|sθi    cαicθi  -sαicθi  Aisθi|
+|0      sαi     cαi      Di   |
+|0      0       0        1    |
+9)  Form T0_n =T0_1 T1_2 T2_3 ....Tn-1,n. This gives the position and orientation of the end-effector frame expressed in the base coordinates. Note: The origin of the base frame is coincident with the origin of the joint 1. This assumes that the axis the first joint is normal to the xy plane.
+
+MODIFIED CONVENTION:
+
+The link and joint parameters in the modified convention as shown in figure 8 are as follows:
+• Twist angle,αi−1 is the angle between zi−1 to zi measured about xi−1
+• Link length, ai−1 is the distance from zi−1 to zi measured along xi−1
+• Offset length, di is the distance from xi−1 to xi measured along zi • Joint angle, θi is the angle between xi−1 to xi measured about zi
+
+The frame transformation i−1Ti describing the finite motion from link i -1 to link i may then be expressed as the following sequence of elementary
+transformations, starting from link (i – 1):
+1. A rotation αi−1 about xi-1.
+2. A translation ai-1 along the xi-1 axis
+3. A rotation θi about zi;
+4. A translation di along the same axis zi;
+
+Computing the above matrix multiplications we get:
+
+Ti-1,i = [cθi       -sθi       0       Ai-1   ] -> cθ - cosθ
+         |sθicαi-1  cθicαi-1  -sαi-1  -Disαi-1|
+         |sθisαi-1  cθisαi-1   cαi-1   Dicαi-1|
+         |0         0          0       1      |
+
+Algorithm for modified DH convention/requirement:
+Step - 1: Assigning of base frame: the base frame {0} is assigned to link 0.
+The base frame {0} is arbitrary. For simplicity chose z0 along z1 axis when the first joint variable is zero. Using this convention, we have a0 = 0 andα0 = 0. This also ensures that d1 = 0 if the joint
+is revolute and θ1 = 0if the joint is prismatic.
+Step - 2: Identify links. The link frames are named by number according to the link to which they are attached (i.e. frame {i} is attached rigidly to link i). For example, the frame {2} is attached to link 2.
+Identify joints. The z-axis of frame {i}, called zi , is coincident with the joint axis i. The link i has two joint axes, zi and zi+1 . The zi
+axis is assigned to joint i and zi+1 is assigned to joint (i+1).
+For i = 1,....., n perform steps 3 to 6.
+Step – 3: Identify the common normal between zi and zi+1 axes, or point of
+intersection. The origin of frame {i} is located where the common normal ( ai ) meets the zi axis.
+Step – 4: Assign the zi axis pointing along the ith joint axis.
+Step – 5: Assign xi axis pointing along the common normal ( ai ) in the direction from zi axis to zi+1 axis. In the case of ai = 0, xi is normal
+to the plane of zi and zi+1 axes.
+• As seen from figure 3.7, the joints may not necessarily be parallel or intersecting. As a result, the z-axes are skew lines. There is always one line mutually perpendicular to any two skew lines, called the common normal, which has the shortest
+Paramount Publishing House, Hyderabad 277
+Difference between denavit - hartenberg (d-h) classical and modified conventions .......
+distance between them. We always assign the x-axis of the local reference frames in the direction of the common normal. Thus, if ai represents the common normal between zi and zi+1, the direction xi is along ai.
+• If two joint z-axes are parallel, there are an infinite number of common normals present. We will pick the common normal that is collinear with the common normal of the previous joint.
+• If the z-axes of two successive joints are intersecting, there is no common normal between them (or it has zero length). We will assign the x-axis along a line perpendicular to the plane formed by the two axes.
+Step – 6: The yi axis is selected to complete right-hand coordinate system. Step – 7: Assigning of end-effector frame: If the joint n is revolute, the direction of xn is chosen along the direction of xn−1 when θn = 0
+and the origin of frame {n} is chosen so thatdn = 0. If the joint n is prismatic, the direction of xn is chosen so that θn = 0 and the origin of frame {n} is chosen at the intersection of xn−1 with zn so thatdn =0.
+Step – 8: The link parameters are determined as mentioned in table
+ai−1 = the distance from zi−1 to zi measured along xi−1 αi−1 = the angle between zi−1 to zi measured about xi−1 di is the distance from xi−1 to xi measured along zi
+θi is the angle between xi−1 to xi measured about zi
+Step 9: Form 0T =0T 1T 2T ....n−1T . This gives the position and orientation of the end-effector frame expressed in the base coordinates.
