@@ -6,6 +6,21 @@ from math import acos, atan2, sqrt, sin, cos, sqrt
 import matplotlib.pyplot as plt
 from kinematic_calculator import DH
 def forward_kinematics(theta1: float, theta2: float, theta3: float, theta4: float) -> list:
+    """
+    Calculates the forward kinematics of a robotic arm based on the given joint angles.
+
+    Args:
+        theta1 (float): The angle of joint 1 in degrees.
+        theta2 (float): The angle of joint 2 in degrees.
+        theta3 (float): The angle of joint 3 in degrees.
+        theta4 (float): The angle of joint 4 in degrees.
+
+    Returns:
+        list: A list containing the X, Y, and Z coordinates of the end effector.
+
+    Raises:
+        None
+    """
     theta1 = theta1 * PI / 180
     theta2 =  ((theta2 * PI / 180) ) # Greater than 90 -> 90 + (theta2 - 90); Less than 90 -> 90 - (90 - theta2)
     # TODO Make it so that theta3 is 90-(180-theta3) if theta3 > 180.
@@ -48,6 +63,21 @@ def forward_kinematics(theta1: float, theta2: float, theta3: float, theta4: floa
 
 
 def kinematic_plot(theta1: float, theta2: float, theta3: float, theta4: float):
+    """
+    Generate the function comment for the given function body in a markdown code block with the correct language syntax.
+
+    Args:
+        theta1 (float): The value of theta1.
+        theta2 (float): The value of theta2.
+        theta3 (float): The value of theta3.
+        theta4 (float): The value of theta4.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
     ax = plt.axes(projection = '3d')
     x_range = []
     y_range = []
