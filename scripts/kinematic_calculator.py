@@ -64,20 +64,46 @@ def DH(alpha: float, a: float, theta: float, d: float) -> Matrix:
     symbolic variables, but if you want alpha=90 degrees, use pi/2
     (for example).  Also be sure to use pi from sympy so that
     sin(pi/2)=1, cos(pi/2)=0, and so on."""
-    T = Matrix([[cos(theta * round((PI/180), 4)), -sin(theta * round((PI/180), 4))*cos(alpha * round((PI/180), 4)), sin(theta * round((PI/180), 4))*sin(alpha * round((PI/180), 4)), a*cos(theta * round((PI/180), 4))], \
-                [sin(theta * round((PI/180), 4)), cos(theta * round((PI/180), 4))*cos(alpha * round((PI/180), 4)), -cos(theta * round((PI/180), 4))*sin(alpha * round((PI/180), 4)), a*sin(theta * round((PI/180), 4))], \
-                [0         , sin(alpha * round((PI/180), 4))           , cos(alpha * round((PI/180), 4))  ,          d],\
-                [0         , 0                                 , 0                        ,          1]])
+    theta_rad = theta * round(PI/180, 4)
+    alpha_rad = alpha * round(PI/180, 4)
+    cos_theta = cos(theta_rad)
+    sin_theta = sin(theta_rad)
+    cos_alpha = cos(alpha_rad)
+    sin_alpha = sin(alpha_rad)
+    
+    T = Matrix([[cos_theta, -sin_theta*cos_alpha, sin_theta*sin_alpha, a*cos_theta], 
+                [sin_theta, cos_theta*cos_alpha, -cos_theta*sin_alpha, a*sin_theta], 
+                [0, sin_alpha, cos_alpha, d], 
+                [0, 0, 0, 1]])
+    
     return T
 
 def MDH(alpha: float, a: float, theta: float, d: float) -> Matrix:
-    T = Matrix([[cos(theta * round((PI/180), 4)), -sin(theta * round((PI/180), 4)), 0, a], \
-                [sin(theta * round((PI/180), 4)) * cos(alpha * round((PI/180), 4)), cos(theta * round((PI/180), 4)) * cos(alpha * round((PI/180), 4)), -sin(alpha * round((PI/180), 4)), -d * sin(alpha * round((PI/180), 4))], \
-                [sin(theta * round((PI/180), 4)) * sin(alpha * round((PI/180), 4)), cos(theta * round((PI/180), 4)) * sin(alpha * round((PI/180), 4)), cos(alpha * round((PI/180), 4)) , d * cos(alpha * round((PI/180), 4))],\
-                [0                                                , 0                                                , 0                       ,          1]])
+    cos_theta = cos(theta * round((PI/180), 4))
+    sin_theta = sin(theta * round((PI/180), 4))
+    cos_alpha = cos(alpha * round((PI/180), 4))
+    sin_alpha = sin(alpha * round((PI/180), 4))
+    
+    T = Matrix([[cos_theta, -sin_theta, 0, a], \
+                [sin_theta * cos_alpha, cos_theta * cos_alpha, -sin_alpha, -d * sin_alpha], \
+                [sin_theta * sin_alpha, cos_theta * sin_alpha, cos_alpha , d * cos_alpha],\
+                [0, 0, 0, 1]])
+    
     return T
 
 def jacobian_calculator(alpha: float, a: float, theta: float, d: float) -> Matrix:
+    """
+    Calculate the Jacobian matrix for a given set of parameters.
+
+    Args:
+        alpha (float): The alpha parameter.
+        a (float): The a parameter.
+        theta (float): The theta parameter.
+        d (float): The d parameter.
+
+    Returns:
+        Matrix: The Jacobian matrix.
+    """
     pass
 #     T = MDH(alpha=alpha, a=a, theta = theta, d=d)
 #     px = T[4]1]

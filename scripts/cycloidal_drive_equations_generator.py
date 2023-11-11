@@ -1,5 +1,6 @@
-def display(N: int, R: float, r: float , E: float):
-    """Generate Cycloid Drive Profile
+def display(N: int, R: float, r: float, E: float):
+    """
+    Generate Cycloid Drive Profile
 
     Args:
         N (int): Number of teeth/rollers
@@ -8,16 +9,22 @@ def display(N: int, R: float, r: float , E: float):
         E (float): Eccentricity of the input shaft to the cycloid disc. E<R/N
         Ratio is N-1:1
 
-
     Returns:
         dict: X and Y coordinates of the parametric equation
     """
-    _N = 1-N
-    R_EN = R/(E*N)
-    print("X = ({}*cos(t)) - ( {}*cos( t+arctan( sin({}*t)/({} - cos({}*t)) ) ) ) - ({}*cos({}*t)) ".format(R,r,_N,R_EN,_N,E,N ))
-    print("Y = (-{}*sin(t)) + ( {}*sin( t+arctan( sin({}*t)/({} - cos({}*t)) ) ) ) + ({}*sin({}*t)) ".format(R,r,_N,R_EN,_N,E,N))
-    print("t_1 = (-10/360)*(2*pi)\nt_2 = (190/360)*(2*pi)")
-    print(f"Eccentricity should be less than: {R/N}")
+    _N = 1 - N
+    R_EN = R / (E * N)
+    X = f"({R}*cos(t)) - ({r}*cos(t + arctan(sin({N}*t)/({R_EN} - cos({N}*t))))) - ({r}*cos({N}*t))"
+    Y = f"(-{R}*sin(t)) + ({r}*sin(t + arctan(sin({N}*t)/({R_EN} - cos({N}*t))))) + ({r}*sin({N}*t))"
+    t_1 = "(-10/360)*(2*pi)"
+    t_2 = "(190/360)*(2*pi)"
+    Eccentricity_limit = R / N
+
+    print(f"X = {X}")
+    print(f"Y = {Y}")
+    print(f"t_1 = {t_1}")
+    print(f"t_2 = {t_2}")
+    print(f"Eccentricity should be less than: {Eccentricity_limit}")
 
 
 display(N=16, r= 6.5, E=1.5, R=37.5)
